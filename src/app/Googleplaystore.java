@@ -57,3 +57,5 @@ public class Googleplaystore{
     }
 
 }
+
+// When to use readlines(), readalllines() and lines()
