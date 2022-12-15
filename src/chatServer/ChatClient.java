@@ -1,35 +1,40 @@
 package chatServer;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class ChatClient extends Thread {
+public class ChatClient implements Runnable {
 
     
     // Connecting to the server using localhost and port
-    private Socket clientSocket;
+    private final Socket clientSocket;
 
-    public ChatClient(Socket clientSocket) {
-        this.clientSocket = clientSocket;
+    public ChatClient(String host, Integer port) throws UnknownHostException, IOException {
+        Socket socket = new Socket(host, port);
+		System.out.println("Connected to " + host + ":" + socket.getPort());
+		this.clientSocket = socket;
     }
 
     // To input datastreams from the client using hashmap so to input the key and value 
     Map<String, Socket> clientInput = new HashMap<String, Socket>();
 
-
+    public static void main(String[] args) throws Exception {
+        new ChatClient(args[0], Integer.parseInt(args[1])).run();
+    }
     @Override
     public void run() {
         
         System.out.println("Chat Client is running");
 
             try{
-
                 Scanner sc = new Scanner("Enter chat message: ");
                 String message = sc.nextLine();
                 // Create new streams to read into the socket stream
@@ -72,7 +77,6 @@ public class ChatClient extends Thread {
 
                     // Close the output stream
                     out.close();
-
  
                 }
 
@@ -83,6 +87,8 @@ public class ChatClient extends Thread {
             } finally {
                 clientInput.remove(clientSocket);
             }
-        }
-        
+    
+    }
+
+    
 }

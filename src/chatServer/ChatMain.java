@@ -5,8 +5,6 @@ import java.net.Socket;
 
 public class ChatMain {
     
-    
-
     public static void main(String[] args) throws Exception{
 
         // getting the port number 
@@ -20,7 +18,8 @@ public class ChatMain {
             Socket client = server.accept();
 
             System.out.println("New client connected" + client.getInetAddress());
-            new ChatClient(client).start();
+            Thread thread = new Thread(new ChatClient("localhost", PORT));
+            thread.start();
 
         }
 
